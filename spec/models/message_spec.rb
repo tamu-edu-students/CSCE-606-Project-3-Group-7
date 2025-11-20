@@ -133,7 +133,7 @@ RSpec.describe Message, type: :model do
 
       it 'respects default 500m radius' do
         results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
-        expect(results.count).to eq(2)
+        expect(results.to_a.size).to eq(2)
       end
     end
   end
