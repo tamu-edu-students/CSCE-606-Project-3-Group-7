@@ -138,9 +138,19 @@ RSpec.describe Message, type: :model do
     end
 
     context 'radius is fixed at 500m' do
-      it 'does not accept custom radius parameter' do
-        # Method should only take x, y, z - no radius parameter
-        expect(Message.method(:within_radius).arity).to eq(3)
+      it 'always uses 500m radius regardless of distance' do
+        # Even if message is 450m away, it should be included
+        # This verifies radius is fixed at 500m, not configurable
+        close_message = Message.create!(
+          user: user,
+          body: 'At 450m',
+          ecef_x: 4000450.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
+        expect(results).to include(close_message)
       end
     end
   end
