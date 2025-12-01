@@ -99,41 +99,48 @@ RSpec.describe Message, type: :model do
       )
     end
 
-    context 'when filtering by radius' do
-      it 'includes messages within radius' do
-        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0, 500)
-        expect(results).to include(message_nearby)
+    context 'when filtering by fixed 500m radius' do
+      it 'includes messages within 500m radius' do
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
         expect(results).to include(message_within_radius)
       end
 
-      it 'excludes messages outside radius' do
-        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0, 500)
+      it 'includes nearby messages within radius' do
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
+        expect(results).to include(message_nearby)
+      end
+
+      it 'excludes messages outside 500m radius' do
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
         expect(results).not_to include(message_outside_radius)
       end
 
-      it 'orders results by distance (closest first)' do
-        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0, 500)
-        expect(results.first).to eq(message_nearby)  # 100m
-        expect(results.second).to eq(message_within_radius)  # 500m
+      it 'orders results with closest first' do
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
+        expect(results.first).to eq(message_nearby)
       end
 
-      it 'includes distance in results' do
-        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0, 500)
+      it 'orders results with second closest second' do
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
+        expect(results.second).to eq(message_within_radius)
+      end
+
+      it 'includes distance attribute in results' do
+        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
         first_result = results.first
         expect(first_result.distance).to be_within(1).of(100.0)
       end
-    end
 
-    context 'with different radius values' do
-      it 'respects 200m radius' do
-        results = Message.within_radius(4000000.0, 3000000.0, 2000000.0, 200)
-        expect(results).to include(message_nearby)
-        expect(results).not_to include(message_within_radius)
-      end
-
-      it 'respects default 500m radius' do
+      it 'returns correct count of messages' do
         results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
         expect(results.to_a.size).to eq(2)
+      end
+    end
+
+    context 'radius is fixed at 500m' do
+      it 'does not accept custom radius parameter' do
+        # Method should only take x, y, z - no radius parameter
+        expect(Message.method(:within_radius).arity).to eq(3)
       end
     end
   end
