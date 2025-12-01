@@ -236,6 +236,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
+    openssl (3.3.2)
     ostruct (0.6.3)
     parallel (1.27.0)
     parser (3.3.10.0)
@@ -460,6 +461,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  openssl
   proj4rb
   propshaft
   puma (>= 5.0)

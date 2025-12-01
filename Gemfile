@@ -74,4 +74,5 @@ group :test do
 end
 
 gem "geocoder"
+gem "openssl"
 gem "proj4rb"
