@@ -1,9 +1,9 @@
 class Message < ApplicationRecord
   belongs_to :user
-  
+
   # Constants - Fixed visibility radius per US4.1
   VISIBILITY_RADIUS_METERS = 500
-  
+
   # Validations
   validates :body, presence: true
   validates :ecef_x, presence: true
@@ -24,7 +24,7 @@ class Message < ApplicationRecord
   # Radius is not configurable per requirements (US4.1)
   scope :within_radius, ->(x, y, z) {
     radius_meters = VISIBILITY_RADIUS_METERS
-    
+
     # Bounding box optimization: filter candidates before expensive sqrt
     where(
       "ecef_x BETWEEN ? AND ? AND

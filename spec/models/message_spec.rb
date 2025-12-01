@@ -148,7 +148,7 @@ RSpec.describe Message, type: :model do
           ecef_y: 3000000.0,
           ecef_z: 2000000.0
         )
-        
+
         results = Message.within_radius(4000000.0, 3000000.0, 2000000.0)
         expect(results).to include(close_message)
       end
