@@ -72,3 +72,6 @@ group :test do
   gem "simplecov", require: false
   gem "shoulda-matchers", "~> 6.0"
 end
+
+gem "geocoder"
+gem "proj4rb"
