@@ -1,5 +1,4 @@
 require "geocoder"
-require "proj"
 
 class MessageController < ApplicationController
   def create
@@ -21,20 +20,29 @@ class MessageController < ApplicationController
       address_to_cartesian(p[:address])
     else
       Rails.logger.warn("No latitude/longitude or address provided")
-      Proj::Coordinate.new(x: nil, y: nil, z: nil)
+      [ nil, nil, nil ]
     end
-    Rails.logger.info("Cartesian coordinates: x=#{cartesian&.x}, y=#{cartesian&.y}, z=#{cartesian&.z}")
+    Rails.logger.info("Cartesian coordinates: #{cartesian.inspect}")
     p.permit(:body, :user_id).merge(
-      ecef_x: cartesian&.x,
-      ecef_y: cartesian&.y,
-      ecef_z: cartesian&.z
+      ecef_x: cartesian[0],
+      ecef_y: cartesian[1],
+      ecef_z: cartesian[2]
     )
   end
 
   def geo_to_cartesian(lat, lon)
     Rails.logger.info("Converting geo to cartesian: lat=#{lat}, lon=#{lon}")
-    transform = Proj::Transformation.new("EPSG:4326", "EPSG:4978")
-    transform.forward(Proj::Coordinate.new(lon: lon, lat: lat, z: 0))
+    # https://ea4eoz.blogspot.com/2015/11/simple-wgs-84-ecef-conversion-functions.html
+    a = 6378137.0 # WGS84 semi-major axis in meters
+    e = 0.081819190842622 # WGS84 first eccentricity
+    e_sq = e**2
+    lat_rad = lat * Math::PI / 180.0
+    lon_rad = lon * Math::PI / 180.0
+    n = a / Math.sqrt(1 - e_sq * Math.sin(lat_rad)**2) # Radius of curvature in the prime vertical
+    x = n * Math.cos(lat_rad) * Math.cos(lon_rad)
+    y = n * Math.cos(lat_rad) * Math.sin(lon_rad)
+    z = n * (1 - e_sq) * Math.sin(lat_rad)
+    [ x, y, z ]
   end
 
   def address_to_cartesian(address)
@@ -46,7 +54,7 @@ class MessageController < ApplicationController
       geo_to_cartesian(lat.to_f, lon.to_f)
     else
       Rails.logger.warn("Geocoding failed for address: #{address}")
-      nil
+      [ nil, nil, nil ]
     end
   end
 end

@@ -54,9 +54,9 @@ RSpec.describe "Messages", type: :request do
       json = JSON.parse(response.body)
       expect(json["status"]).to eq("Message created successfully")
       expect(json["message"]["body"]).to eq("Hello from Huntsville, AL!")
-      expect(json["message"]["ecef_x"]).to be_within(1.0).of(313209)
-      expect(json["message"]["ecef_y"]).to be_within(1.0).of(217117)
-      expect(json["message"]["ecef_z"]).to be_within(1.0).of(-6345394)
+      expect(json["message"]["ecef_x"]).to be_within(1.0).of(312503)
+      expect(json["message"]["ecef_y"]).to be_within(1.0).of(-5238246)
+      expect(json["message"]["ecef_z"]).to be_within(1.0).of(3613276)
     end
 
     it "creates a message with valid address parameters" do
@@ -65,9 +65,10 @@ RSpec.describe "Messages", type: :request do
       json = JSON.parse(response.body)
       expect(json["status"]).to eq("Message created successfully")
       expect(json["message"]["body"]).to eq("Hello from Zachry Engineering Education Complex!")
-      expect(json["message"]["x"]).to be_within(15.0).of(1334773)
-      expect(json["message"]["y"]).to be_within(15.0).of(-4651630)
-      expect(json["message"]["z"]).to be_within(15.0).of(4140749)
+      # the building has a radius of about 100m, so allow some leeway
+      expect(json["message"]["ecef_x"]).to be_within(100.0).of(-606693)
+      expect(json["message"]["ecef_y"]).to be_within(100.0).of(-5459887)
+      expect(json["message"]["ecef_z"]).to be_within(100.0).of(3229843)
     end
 
     it "does not create a message with invalid parameters" do

@@ -75,4 +75,3 @@ end
 
 gem "geocoder"
 gem "openssl"
-gem "proj4rb"
