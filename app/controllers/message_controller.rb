@@ -2,13 +2,23 @@ require "geocoder"
 
 class MessageController < ApplicationController
   def create
-    # Your code for creating a message goes here
     @message = Message.new(message_params)
     if @message.save
       render json: { status: "Message created successfully", message: @message }, status: :created
     else
       render json: { status: "Error", errors: @message.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def index
+    if message_params[:ecef_x].nil? || message_params[:ecef_y].nil? || message_params[:ecef_z].nil?
+      render json: { status: "Error", errors: [ "Missing or invalid location parameters" ] }, status: :bad_request
+      return
+    end
+    @messages = Message.within_radius(message_params[:ecef_x].to_f,
+                                      message_params[:ecef_y].to_f,
+                                      message_params[:ecef_z].to_f)
+    render json: { status: "Success", messages: @messages }, status: :ok
   end
 
   private
@@ -19,7 +29,6 @@ class MessageController < ApplicationController
     elsif p[:address]
       address_to_cartesian(p[:address])
     else
-      Rails.logger.warn("No latitude/longitude or address provided")
       [ nil, nil, nil ]
     end
     Rails.logger.info("Cartesian coordinates: #{cartesian.inspect}")

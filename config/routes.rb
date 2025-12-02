@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   post "messages", to: "message#create"
+  get "messages", to: "message#index"
 end

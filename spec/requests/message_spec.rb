@@ -79,4 +79,49 @@ RSpec.describe "Messages", type: :request do
       expect(json["errors"]).to include("Body can't be blank")
     end
   end
+
+  describe "GET /index" do
+    before do
+      User.create!(
+      id: 1,
+      email: "test2@example.com",
+      password_digest: "password",
+      display_name: "Test User 2",
+      avatar_url: nil,
+      is_admin: false,
+      ecef_x: nil,
+      ecef_y: nil,
+      ecef_z: nil,
+      location_updated_at: nil,
+      deleted_at: nil
+      )
+      Message.create!(
+        body: "Hello from Huntsville, AL!",
+        user_id: 1,
+        ecef_x: 312503,
+        ecef_y: -5238246,
+        ecef_z: 3613276
+      )
+      Message.create!(
+        body: "Hello from Zachry Engineering Education Complex!",
+        user_id: 1,
+        ecef_x: -606693,
+        ecef_y: -5459887,
+        ecef_z: 3229843
+      )
+    end
+
+    it "retrieves messages within 500m radius" do
+      get "/messages", params: {
+        message: {
+          address: "Zachry Engineering Education Complex, College Station, TX"
+        }
+      }
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json["status"]).to eq("Success")
+      expect(json["messages"].length).to eq(1)
+      expect(json["messages"][0]["body"]).to eq("Hello from Zachry Engineering Education Complex!")
+    end
+  end
 end
