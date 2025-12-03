@@ -6,10 +6,6 @@ When("I register with email {string}") do |email|
   click_button "Sign up"
 end
 
-Then("I should see {string}") do |text|
-  expect(page).to have_content(text)
-end
-
 Then("I should see an anonymous username") do
   expect(page).to have_content(/Aggie\d+/)
 end

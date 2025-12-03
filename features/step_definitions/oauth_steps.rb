@@ -19,11 +19,11 @@ When('I visit {string}') do |path|
 end
 
 Then('I should be logged in') do
-  expect(page.get_rack_session_key('user_id')).not_to be_nil
+  expect(Capybara.current_session.driver.request.session[:user_id]).not_to be_nil
 end
 
 Then('I should not be logged in') do
-  expect(page.get_rack_session_key('user_id')).to be_nil
+  expect(Capybara.current_session.driver.request.session[:user_id]).to be_nil
 end
 
 Then('a user with email {string} should exist') do |email|
@@ -32,4 +32,9 @@ end
 
 Then('no users should exist') do
   expect(User.count).to eq(0)
+end
+
+Then('I should see an anonymous display name') do
+  visit root_path
+  expect(page).to have_content(/Anonymous (Raccoon|Reveille|Aggie|Howdy|Squirrel)/)
 end

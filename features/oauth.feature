@@ -17,3 +17,9 @@ Feature: TAMU Google OAuth login
     When I visit "/auth/google_oauth2/callback"
     Then I should not be logged in
     And no users should exist
+    
+    Scenario: User gets anonymous display name
+    Given Google OAuth returns email "student@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And I should see an anonymous display name

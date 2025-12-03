@@ -1,9 +1,9 @@
 class User < ApplicationRecord
   has_many :messages, dependent: :destroy
-  
+
   # Validations
   validates :email, format: { with: /\A.+@tamu\.edu\z/i, message: "must be a tamu.edu address" }
-  
+
   # Callbacks
   before_validation :assign_display_name, on: :create
 
@@ -37,7 +37,7 @@ class User < ApplicationRecord
 
   def assign_display_name
     if display_name.blank?
-      animal = ["Raccoon", "Reveille", "Aggie", "Howdy", "Squirrel"].sample
+      animal = [ "Raccoon", "Reveille", "Aggie", "Howdy", "Squirrel" ].sample
       self.display_name = "Anonymous #{animal}"
     end
   end
