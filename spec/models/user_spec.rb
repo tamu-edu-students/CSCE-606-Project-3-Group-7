@@ -30,5 +30,4 @@ RSpec.describe User, type: :model do
       expect(user.image_url).to be_nil
     end
   end
-  
 end

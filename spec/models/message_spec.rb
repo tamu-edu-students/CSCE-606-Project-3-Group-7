@@ -62,10 +62,7 @@ RSpec.describe Message, type: :model do
   describe '.within_radius' do
     let!(:user) do
       User.create!(
-        email: 'test@example.com',
-        ecef_x: 4000000.0,
-        ecef_y: 3000000.0,
-        ecef_z: 2000000.0
+        email: 'test@tamu.edu',
       )
     end
 
