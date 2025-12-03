@@ -5,5 +5,5 @@ Feature: Homepage
 
   Scenario: Visiting the homepage
     When I visit the homepage
-    Then I should see "Home Page"
-    And I should see "Proximity Chat Application"
+    Then I should see "Welcome to Location Chat"
+    And I should see "Sign in with Google"
