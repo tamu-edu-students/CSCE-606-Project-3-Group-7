@@ -1,0 +1,32 @@
+<h1>All Messages (Admin)</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Time</th>
+    <th>User</th>
+    <th>Message</th>
+    <th>Distance (m)</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @messages.each do |m| %>
+    <tr>
+      <td><%= m.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+      <td><%= m.user.display_name %> (<%= m.user.email %>)</td>
+      <td><%= simple_format(h(m.body)) %></td>
+      <td>
+        <% if current_user && current_user.ecef_x && m.ecef_x %>
+          <%= number_with_precision(m.distance_to_user(current_user), precision: 2) rescue '—' %>
+        <% else %>
+          —
+        <% end %>
+      </td>
+      <td>
+        <%= button_to "Delete", message_path(m), method: :delete, data: { confirm: "Delete message?" } %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

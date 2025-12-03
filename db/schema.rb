@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_03_063455) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_03_195940) do
   create_table "messages", force: :cascade do |t|
-    t.integer "user_id", null: false
     t.text "body"
     t.float "ecef_x"
     t.float "ecef_y"
     t.float "ecef_z"
+    t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_messages_on_user_id"
