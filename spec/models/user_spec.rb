@@ -30,16 +30,5 @@ RSpec.describe User, type: :model do
       expect(user.image_url).to be_nil
     end
   end
-
-  # context "location validations" do
-  #   it "validates latitude numericality" do
-  #     user = User.new(email: "x@tamu.edu", latitude: "not-a-number")
-  #     expect(user.valid?).to be(false)
-  #   end
-
-  #   it "validates longitude numericality" do
-  #     user = User.new(email: "x@tamu.edu", longitude: nil)
-  #     expect(user.valid?).to be(false)
-  #   end
-  # end
+  
 end
