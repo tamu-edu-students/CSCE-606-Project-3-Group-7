@@ -16,6 +16,12 @@ class MessagesController < ApplicationController
     end
   end
 
+  def destroy
+    @message = Message.find(params[:id])
+    @message.destroy
+    redirect_to chat_path, notice: "Message deleted"
+  end
+
   private
 
   def message_params
@@ -24,7 +30,7 @@ class MessagesController < ApplicationController
 
   def require_login
     unless current_user
-      redirect_to login_path, alert: "Please log in to use the chat"
+      redirect_to root_path, alert: "Please log in to use the chat"
     end
   end
 

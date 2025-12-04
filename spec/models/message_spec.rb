@@ -151,4 +151,88 @@ RSpec.describe Message, type: :model do
       end
     end
   end
+
+  describe 'callbacks' do
+    let(:user) { User.create!(email: 'test@tamu.edu') }
+
+    describe '#strip_body_whitespace' do
+      it 'strips leading and trailing whitespace' do
+        message = Message.new(
+          user: user,
+          body: '   Hello   ',
+          ecef_x: 4000000.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        message.save!
+        expect(message.body).to eq('Hello')
+      end
+
+      it 'removes newlines and replaces with spaces' do
+        message = Message.new(
+          user: user,
+          body: "Hello\n\nWorld",
+          ecef_x: 4000000.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        message.save!
+        expect(message.body).to eq('Hello World')
+      end
+
+      it 'collapses multiple spaces to single space' do
+        message = Message.new(
+          user: user,
+          body: 'Hello    World',
+          ecef_x: 4000000.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        message.save!
+        expect(message.body).to eq('Hello World')
+      end
+
+      it 'strips whitespace from messages with only whitespace' do
+        message = Message.new(
+          user: user,
+          body: "   \n\n   ",
+          ecef_x: 4000000.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        # Will fail validation after stripping because body becomes empty
+        expect(message).not_to be_valid
+        expect(message.errors[:body]).to be_present
+      end
+
+      it 'handles nil body gracefully' do
+        message = Message.new(
+          user: user,
+          body: nil,
+          ecef_x: 4000000.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        expect { message.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it 'removes carriage returns' do
+        message = Message.new(
+          user: user,
+          body: "Hello\r\nWorld",
+          ecef_x: 4000000.0,
+          ecef_y: 3000000.0,
+          ecef_z: 2000000.0
+        )
+        message.save!
+        expect(message.body).to eq('Hello World')
+      end
+    end
+  end
+
+  describe 'VISIBILITY_RADIUS_METERS constant' do
+    it 'is set to 500 meters' do
+      expect(Message::VISIBILITY_RADIUS_METERS).to eq(500)
+    end
+  end
 end

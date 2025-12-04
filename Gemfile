@@ -53,7 +53,7 @@ group :development, :test do
   gem "rubocop-rails", require: false
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
-  gem 'bcrypt', '~> 3.1.7'
+  gem "bcrypt", "~> 3.1.7"
 
   # Cucumber stack
   gem "cucumber-rails", require: false

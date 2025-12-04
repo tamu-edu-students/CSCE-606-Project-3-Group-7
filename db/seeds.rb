@@ -7,3 +7,11 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Create sysadmin user
+user = User.find_or_create_by!(email: 'harsh.wadhawe@tamu.edu') do |u|
+  u.display_name = 'System Admin'
+  u.provider = 'google_oauth2'
+  u.uid = 'sysadmin'
+end
+user.update!(role: 'admin')

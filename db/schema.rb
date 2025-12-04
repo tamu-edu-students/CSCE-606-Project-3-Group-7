@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_03_195940) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_04_001033) do
   create_table "messages", force: :cascade do |t|
     t.text "body"
     t.float "ecef_x"
@@ -27,14 +27,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_03_195940) do
     t.string "password_digest"
     t.string "display_name"
     t.string "avatar_url"
-    t.boolean "is_admin"
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "provider"
     t.string "uid"
     t.string "name"
+    t.string "role", default: "user", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["role"], name: "index_users_on_role"
   end
 
   add_foreign_key "messages", "users"

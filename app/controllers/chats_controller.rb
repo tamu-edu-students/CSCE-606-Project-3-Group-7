@@ -34,7 +34,7 @@ class ChatsController < ApplicationController
 
   def require_login
     unless current_user
-      redirect_to login_path, alert: "Please log in to use the chat"
+      redirect_to root_path, alert: "Please log in to use the chat"
     end
   end
 end
