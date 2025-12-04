@@ -1,0 +1,48 @@
+<div class="header">
+  <p>
+    <%= link_to "← Back to Chat", chat_path %>
+    | Logged in as <strong><%= current_user.display_name %></strong>
+    | <%= link_to "Logout", logout_path, method: :delete %>
+  </p>
+</div>
+
+<div class="container">
+  <div class="admin-container">
+    <h1>All Messages (Admin)</h1>
+
+    <% if @messages.empty? %>
+      <p>No messages found.</p>
+    <% else %>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>User</th>
+            <th>Message</th>
+            <th>Distance (m)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @messages.each do |m| %>
+            <tr>
+              <td><%= m.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+              <td><%= m.user.display_name %> (<%= m.user.email %>)</td>
+              <td><%= h(m.body.strip) %></td>
+              <td>
+                <% if m.ecef_x && m.ecef_y && m.ecef_z && @user_ecef_x && @user_ecef_y && @user_ecef_z %>
+                  <%= number_with_precision(m.distance_to(@user_ecef_x, @user_ecef_y, @user_ecef_z), precision: 2) %>
+                <% else %>
+                  —
+                <% end %>
+              </td>
+              <td>
+                <%= button_to "Delete", message_path(m), method: :delete, data: { confirm: "Delete message?" }, class: "btn" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>

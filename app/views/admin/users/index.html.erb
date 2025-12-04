@@ -1,0 +1,41 @@
+<div class="header">
+  <p>
+    <%= link_to "← Back to Chat", chat_path %>
+    | Logged in as <strong><%= current_user.display_name %></strong>
+    | <%= link_to "Logout", logout_path, method: :delete %>
+  </p>
+</div>
+
+<div class="container">
+  <div class="admin-container">
+    <h1>All Users (Admin)</h1>
+
+    <% if @users.empty? %>
+      <p>No users found.</p>
+    <% else %>
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Display Name</th>
+            <th>Created At</th>
+            <th>Message Count</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= user.email %></td>
+              <td><%= user.display_name %></td>
+              <td><%= user.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+              <td><%= user.messages.count %></td>
+              <td><%= user.admin? ? '<span class="admin-badge">Admin</span>'.html_safe : 'User' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+

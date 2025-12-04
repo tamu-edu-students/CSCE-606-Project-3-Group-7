@@ -1,0 +1,54 @@
+<div class="header">
+  <p>
+    Logged in as <strong><%= current_user.display_name %></strong>
+    (<%= current_user.email %>)
+    | <%= link_to "Logout", logout_path, method: :delete %>
+    <% if current_user&.admin? %>
+      | <%= link_to "Admin Messages", admin_messages_path %>
+      | <%= link_to "Admin Users", admin_users_path %>
+    <% end %>
+  </p>
+</div>
+
+<div class="container">
+  <section class="chat-container">
+    <h1>Global Chat</h1>
+
+    <div class="chat-controls">
+      <form action="<%= chat_path %>" method="get" style="display:inline">
+        <button type="submit">Refresh</button>
+      </form>
+      <!-- Optional meta refresh: uncomment to auto-refresh every 10s (no JS) -->
+      <!-- <meta http-equiv="refresh" content="10"> -->
+    </div>
+
+    <div class="messages">
+      <% if @messages.empty? %>
+        <div class="empty-messages">No messages yet. Be the first to post!</div>
+      <% else %>
+        <% @messages.each do |msg| %>
+          <div class="message <%= 'mine' if msg.user_id == current_user.id %>">
+            <div class="meta">
+              <strong><%= msg.user.display_name %></strong>
+              <span class="ts"><%= msg.created_at.strftime("%Y-%m-%d %H:%M:%S") %></span>
+              <% if msg.respond_to?(:distance) %>
+                <span class="distance"><%= msg.distance.to_i %> m away</span>
+              <% end %>
+            </div>
+            <div class="body">
+              <%= h(msg.body.strip) %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="composer">
+      <%= form_with model: @new_message, url: messages_path, local: true do |f| %>
+        <%= f.label :body, "New Message" %>
+        <%= f.text_area :body, rows: 4, required: true, placeholder: "Type your message here..." %>
+        <%= f.submit "Send" %>
+      <% end %>
+    </div>
+  </section>
+</div>
