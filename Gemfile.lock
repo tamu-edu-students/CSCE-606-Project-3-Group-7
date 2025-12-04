@@ -278,6 +278,12 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
+    pg (1.6.2)
+    pg (1.6.2-aarch64-linux)
+    pg (1.6.2-aarch64-linux-musl)
+    pg (1.6.2-arm64-darwin)
+    pg (1.6.2-x86_64-linux)
+    pg (1.6.2-x86_64-linux-musl)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -504,9 +510,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  omniauth
-  omniauth-google-oauth2
-  omniauth-rails_csrf_protection
+  pg
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.3)
@@ -520,12 +524,15 @@ DEPENDENCIES
   solid_cable
   solid_cache
   solid_queue
-  sqlite3 (>= 2.1)
+  sqlite3
   stimulus-rails
   thruster
   turbo-rails
   tzinfo-data
   web-console
+
+RUBY VERSION
+   ruby 3.4.5p51
 
 BUNDLED WITH
    2.7.2
