@@ -510,6 +510,9 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  omniauth
+  omniauth-google-oauth2
+  omniauth-rails_csrf_protection
   pg
   propshaft
   puma (>= 5.0)
