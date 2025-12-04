@@ -44,6 +44,8 @@ RSpec.describe 'TAMU Google OAuth', type: :request do
 
   context 'with a non-tamu email' do
     before do
+      # Clean up any existing users first
+      User.destroy_all
       mock_google_oauth(email: 'someone@gmail.com')
       get '/auth/google_oauth2/callback'
     end

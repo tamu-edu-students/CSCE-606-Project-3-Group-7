@@ -30,3 +30,25 @@ end
 Then('I should be redirected to the chat page') do
   expect(page.current_path).to eq(chat_path)
 end
+
+Then('I should see user roles displayed') do
+  expect(page).to have_content(/Admin|User/)
+end
+
+Then('I should see message distance information') do
+  expect(page).to have_content('Distance (m)')
+end
+
+When('I delete the message {string}') do |message_body|
+  # Find the message and delete it directly via POST
+  message = Message.find_by(body: message_body)
+  expect(message).to be_present, "Message '#{message_body}' should exist"
+
+  # Submit DELETE request directly (RackTest doesn't support JS confirm dialogs)
+  page.driver.delete("/messages/#{message.id}")
+  visit page.response_headers['Location'] if page.response_headers['Location']
+end
+
+Then('the message {string} should not exist') do |message_body|
+  expect(Message.where(body: message_body).count).to eq(0)
+end

@@ -36,13 +36,16 @@ class User < ApplicationRecord
     user ||= where(email: email.downcase).first
 
     if user
-      # Update OAuth fields to keep them in sync, but preserve role
-      user.update!(
+      # Update OAuth fields to keep them in sync, but preserve role and name if OAuth name is nil/blank
+      update_params = {
         provider: auth.provider,
-        uid: auth.uid,
-        name: auth.info.name || user.name,
-        image_url: auth.info.image || user.image_url
-      )
+        uid: auth.uid
+      }
+      # Only update name if OAuth provides one, otherwise preserve existing
+      update_params[:name] = auth.info.name if auth.info.name.present?
+      # Only update image_url if OAuth provides one, otherwise preserve existing
+      update_params[:image_url] = auth.info.image if auth.info.image.present?
+      user.update!(update_params)
     else
       # Create new user
       user = create!(

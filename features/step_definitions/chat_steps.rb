@@ -6,10 +6,11 @@ Then('I should see the logged in user\'s display name') do
 end
 
 Given('I am logged out') do
-  # Clear session and visit a page to ensure session is cleared
+  # Visit a page first to initialize the session
+  visit root_path
+  # Clear session
   page.driver.browser.clear_cookies if page.driver.respond_to?(:browser)
   Capybara.current_session.driver.request.session[:user_id] = nil
-  visit root_path
 end
 
 Then('I should be redirected to the homepage') do

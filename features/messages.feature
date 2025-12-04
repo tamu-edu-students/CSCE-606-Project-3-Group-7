@@ -20,6 +20,13 @@ Feature: Messages
     And I click on "Send"
     Then I should see an error message
 
+  Scenario: Create message with whitespace
+    When I visit "/chat"
+    And I fill in "New Message" with "  Hello   with   spaces  "
+    And I click on "Send"
+    Then I should see "Hello with spaces"
+    And the message should not have extra whitespace
+
   Scenario: Admin can view all messages
     Given the logged in user should be made an admin
     And I visit "/chat"
@@ -30,4 +37,11 @@ Feature: Messages
     Given I am logged out
     When I submit a POST request to "/messages" with body "Hello"
     Then I should be redirected to the homepage
+
+  Scenario: View my own messages
+    When I visit "/chat"
+    And I fill in "New Message" with "My message"
+    And I click on "Send"
+    Then I should see "My message"
+    And the message should be marked as mine
 

@@ -39,12 +39,13 @@ RSpec.describe 'ApplicationController OAuth', type: :request do
 
     context 'with admin email' do
       before do
-        mock_google_oauth(email: 'harsh.wadhawe@tamu.edu')
+        # Use a different email to avoid conflicts with seeds
+        mock_google_oauth(email: 'admin.test@tamu.edu')
         get '/auth/google_oauth2/callback'
       end
 
       it 'creates a user with default role' do
-        user = User.find_by(email: 'harsh.wadhawe@tamu.edu')
+        user = User.find_by(email: 'admin.test@tamu.edu')
         expect(user).to be_present
         expect(user.role).to eq('user')
       end
@@ -52,6 +53,8 @@ RSpec.describe 'ApplicationController OAuth', type: :request do
 
     context 'with non-TAMU email' do
       before do
+        # Ensure no users exist before test
+        User.where(email: 'test@gmail.com').destroy_all
         mock_google_oauth(email: 'test@gmail.com')
         get '/auth/google_oauth2/callback'
       end
