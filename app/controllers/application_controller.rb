@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
       flash[:alert] = "Only @tamu.edu accounts are allowed."
       redirect_to root_path and return
     end
+
     session[:user_id] = user.id
 
     redirect_to root_path, notice: "Signed in as #{user.name}!"

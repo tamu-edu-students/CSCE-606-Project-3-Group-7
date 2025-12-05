@@ -1,0 +1,13 @@
+<h2>Login</h2>
+
+<form action="<%= login_path %>" method="post">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+
+  <label>Email</label><br>
+  <input type="email" name="email" required /><br><br>
+
+  <label>Password</label><br>
+  <input type="password" name="password" required /><br><br>
+
+  <button type="submit">Login</button>
+</form>
