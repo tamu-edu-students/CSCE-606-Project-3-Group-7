@@ -5,15 +5,11 @@ RSpec.describe "Messages", type: :request do
     before do
       User.create!(
       id: 0,
-      email: "test@example.com",
+      email: "test@tamu.edu",
       password_digest: "password",
       display_name: "Test User",
       avatar_url: nil,
       is_admin: false,
-      ecef_x: nil,
-      ecef_y: nil,
-      ecef_z: nil,
-      location_updated_at: nil,
       deleted_at: nil
       )
     end
@@ -84,15 +80,11 @@ RSpec.describe "Messages", type: :request do
     before do
       User.create!(
       id: 1,
-      email: "test2@example.com",
+      email: "test2@tamu.edu",
       password_digest: "password",
       display_name: "Test User 2",
       avatar_url: nil,
       is_admin: false,
-      ecef_x: nil,
-      ecef_y: nil,
-      ecef_z: nil,
-      location_updated_at: nil,
       deleted_at: nil
       )
       Message.create!(

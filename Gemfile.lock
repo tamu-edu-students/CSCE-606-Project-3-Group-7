@@ -252,7 +252,6 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
-    openssl (3.3.2)
     oauth2 (2.0.18)
       faraday (>= 0.17.3, < 4.0)
       jwt (>= 1.0, < 4.0)
@@ -277,6 +276,7 @@ GEM
     omniauth-rails_csrf_protection (2.0.0)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
+    openssl (3.3.2)
     ostruct (0.6.3)
     parallel (1.27.0)
     parser (3.3.10.0)
@@ -503,15 +503,15 @@ DEPENDENCIES
   cucumber-rails
   database_cleaner-active_record
   debug
+  dotenv-rails
   geocoder
   importmap-rails
   jbuilder
   kamal
-  openssl
-  dotenv-rails
   omniauth
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
+  openssl
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.3)
