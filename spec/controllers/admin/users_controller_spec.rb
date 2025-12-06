@@ -133,6 +133,33 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
       end
 
+      context 'with invalid role value' do
+        it 'rejects invalid role values' do
+          patch :update, params: { id: target_user.id, user: { role: 'invalid_role' } }
+          expect(response).to redirect_to(admin_users_path)
+          expect(flash[:alert]).to eq('Invalid role specified.')
+        end
+
+        it 'does not update the user when role is invalid' do
+          original_role = target_user.role
+          patch :update, params: { id: target_user.id, user: { role: 'super_admin' } }
+          target_user.reload
+          expect(target_user.role).to eq(original_role)
+        end
+
+        it 'rejects nil role values' do
+          patch :update, params: { id: target_user.id, user: { role: nil } }
+          expect(response).to redirect_to(admin_users_path)
+          expect(flash[:alert]).to eq('Invalid role specified.')
+        end
+
+        it 'rejects empty string role values' do
+          patch :update, params: { id: target_user.id, user: { role: '' } }
+          expect(response).to redirect_to(admin_users_path)
+          expect(flash[:alert]).to eq('Invalid role specified.')
+        end
+      end
+
       context 'with invalid parameters' do
         it 'handles update failures gracefully' do
           # Create a user that will fail validation

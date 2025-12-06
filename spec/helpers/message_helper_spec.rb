@@ -31,4 +31,21 @@ RSpec.describe MessageHelper, type: :helper do
     expect(cartesian[1]).to be_within(100.0).of(-5459887)
     expect(cartesian[2]).to be_within(100.0).of(3229843)
   end
+
+  context "when geocoding fails" do
+    it "returns nil array when address cannot be geocoded" do
+      # Mock Geocoder to return empty results
+      allow(Geocoder).to receive(:search).and_return([])
+
+      cartesian = MessageHelper.address_to_cartesian("Invalid Address That Does Not Exist 12345")
+      expect(cartesian).to eq([ nil, nil, nil ])
+    end
+
+    it "logs a warning when geocoding fails" do
+      allow(Geocoder).to receive(:search).and_return([])
+      expect(Rails.logger).to receive(:warn).with(/Geocoding failed for address/)
+
+      MessageHelper.address_to_cartesian("Invalid Address")
+    end
+  end
 end
