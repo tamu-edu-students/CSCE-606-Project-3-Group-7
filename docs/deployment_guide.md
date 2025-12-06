@@ -23,8 +23,8 @@ heroku config:set RAILS_MASTER_KEY=$(cat config/master.key) --app project-3-rail
 heroku config:set GOOGLE_CLIENT_ID="YOUR_CLIENT_ID" --app project-3-rails-app
 heroku config:set GOOGLE_CLIENT_SECRET="YOUR_CLIENT_SECRET" --app project-3-rails-app
 
-# 3. Deploy
-git push heroku main
+# 3. Deploy (pushes current branch to Heroku's main)
+git push heroku $(git branch --show-current):main --force
 
 # 4. Run migrations
 heroku run rails db:migrate --app project-3-rails-app
@@ -195,15 +195,29 @@ heroku config --app project-3-rails-app
 
 ## **7.1 Push Code**
 
+### **If you're on the `main` branch:**
+
 ```bash
 git push heroku main
 ```
 
-Or for feature branch:
+### **If you're on a different branch (feature branch, etc.):**
+
+Push your current branch to Heroku's `main` branch:
 
 ```bash
-git push heroku feature/chat-application:main
+git push heroku {BRANCH_NAME}:main --force
 ```
+
+**Note:** The `--force` flag is typically needed when pushing a branch other than `main` because Heroku's remote branch may have different commits. This overwrites Heroku's main branch with your current branch, which is the standard workflow for Heroku deployments.
+
+**Alternative:** If the above command doesn't work in your shell, you can use:
+
+```bash
+git push heroku HEAD:main --force
+```
+
+This pushes whatever branch you're currently on to Heroku's main branch.
 
 ## **7.2 Run Database Migrations**
 
@@ -293,7 +307,7 @@ Then commit and redeploy:
 ```bash
 git add db/seeds.rb
 git commit -m "Add admin users"
-git push heroku main
+git push heroku $(git branch --show-current):main --force
 heroku run rails db:seed --app project-3-rails-app
 ```
 
