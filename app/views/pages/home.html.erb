@@ -1,16 +1,24 @@
-<h1>Welcome to Location Chat</h1>
+<div class="home-container">
+  <h1>Welcome to Location Chat</h1>
 
-<% if current_user %>
-  <div>
-    <p>Logged in as: <%= current_user.name %></p>
-    <p>Display name: <%= current_user.display_name %></p>
-    <% if current_user.avatar_url %>
-      <%= image_tag current_user.avatar_url, alt: current_user.name, size: "50x50" %>
+  <% if current_user %>
+    <div class="home-user-info">
+      <p><strong>Logged in as:</strong> <%= current_user.name %></p>
+      <p><strong>Display name:</strong> <%= current_user.display_name %></p>
+      <% if current_user.avatar_url %>
+        <div class="home-avatar">
+          <%= image_tag current_user.avatar_url, alt: current_user.name, size: "50x50" %>
+        </div>
+      <% end %>
+      <div class="home-actions">
+        <%= button_to "Go to Chat", chat_path, method: :get, class: "chat-button" %>
+        <%= button_to "Logout", logout_path, method: :post, class: "chat-button logout-button" %>
+      </div>
+    </div>
+  <% else %>
+    <p class="home-description">Connect with people near you using location-based chat.</p>
+    <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do |f| %>
+      <%= link_to "Sign in with Google", "/auth/google_oauth2", method: :get, class: "auth-link" %>
     <% end %>
-    <%= button_to "Logout", logout_path, method: :post %>
-  </div>
-<% else %>
-  <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do |f| %>
-    <%= link_to "Sign in with Google", "/auth/google_oauth2", method: :get %>
   <% end %>
-<% end %>
+</div>

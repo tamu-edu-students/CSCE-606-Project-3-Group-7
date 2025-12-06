@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   match "/auth/:provider/callback", to: "application#oauth_callback", via: [ :get, :post ]
   get "/auth/failure", to: "application#oauth_failure"
   post "/logout", to: "application#logout"
+  get  "/logout", to: "application#logout"
   get "/auth/:provider", to: "omniauth#passthru"
   get "pages/home"
   root "pages#home"
@@ -11,10 +12,13 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Chat UI
+  get "/chat", to: "chats#index", as: :chat
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Messages - index handled by ChatsController, but create/destroy here
+  resources :messages, only: [ :create, :destroy ]
+
+  # Admin view — optional: all messages
+  get "/admin/messages", to: "admin/messages#index", as: :admin_messages
+  get "/admin/users", to: "admin/users#index", as: :admin_users
 end

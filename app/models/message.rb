@@ -10,6 +10,9 @@ class Message < ApplicationRecord
   validates :ecef_y, presence: true
   validates :ecef_z, presence: true
 
+  # Callbacks
+  before_save :strip_body_whitespace
+
   # Instance method: Calculate Euclidean distance to a point (in meters)
   # ECEF coordinates are already in meters, so this is straightforward 3D distance
   def distance_to(x, y, z)
@@ -55,4 +58,17 @@ class Message < ApplicationRecord
     # Order by closest first
     .order("distance ASC")
   }
+
+  private
+
+  def strip_body_whitespace
+    return unless body.present?
+
+    # Strip all leading/trailing whitespace (including newlines)
+    # Collapse multiple newlines/whitespace to single spaces
+    cleaned = body.strip
+    cleaned = cleaned.gsub(/\r\n|\r|\n/, " ") # Replace all newlines with spaces
+    cleaned = cleaned.gsub(/\s+/, " ")         # Collapse multiple spaces to one
+    self.body = cleaned.strip
+  end
 end
