@@ -19,21 +19,37 @@ RSpec.describe 'Messages', type: :request do
 
       it 'creates a message' do
         expect {
-          post messages_path, params: { message: { body: 'Test message' } }
+          post messages_path, params: { message: { body: 'Test message',
+          lat: 34.729847,
+          lon: -86.5859011 } }
         }.to change(Message, :count).by(1)
       end
 
       it 'redirects to chat path on success' do
-        post messages_path, params: { message: { body: 'Test message' } }
-        expect(response).to redirect_to(chat_path)
+        post messages_path, params: { message: { body: 'Test message',
+          lat: 34.729847,
+          lon: -86.5859011 } }
+        expect(response).to redirect_to(chat_path(lat: '34.729847', lon: '-86.5859011'))
       end
 
-      it 'sets ECEF coordinates on message' do
-        post messages_path, params: { message: { body: 'Test message' } }
+      it 'sets correct ECEF coordinates on message with lat/lon' do
+        post messages_path, params: { message: { body: 'Hello from Huntsville, AL!',
+          lat: 34.729847,
+          lon: -86.5859011 } }
         message = Message.last
-        expect(message.ecef_x).not_to be_nil
-        expect(message.ecef_y).not_to be_nil
-        expect(message.ecef_z).not_to be_nil
+        expect(message.ecef_x).to be_within(1.0).of(312503)
+        expect(message.ecef_y).to be_within(1.0).of(-5238246)
+        expect(message.ecef_z).to be_within(1.0).of(3613276)
+      end
+
+      it 'sets correct ECEF coordinates on message with address' do
+        post messages_path, params: { message: { body: 'Hello from Zachry Engineering Education Complex!',
+          address: 'Zachry Engineering Education Complex, College Station, TX' } }
+        message = Message.last
+        # the building has a radius of about 100m, so allow some leeway
+        expect(message.ecef_x).to be_within(100.0).of(-606693)
+        expect(message.ecef_y).to be_within(100.0).of(-5459887)
+        expect(message.ecef_z).to be_within(100.0).of(3229843)
       end
 
       context 'with invalid message' do

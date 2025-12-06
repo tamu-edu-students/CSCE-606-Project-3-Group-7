@@ -1,3 +1,94 @@
+<!--
+  This script handles the instantaneous location retrieval and page reload.
+  It should be placed near the top of your messages/index.html.erb file.
+  It only runs if the 'lat' parameter is not already in the URL, preventing an infinite loop.
+-->
+<script>
+  /**
+   * Check if location data has already been loaded.
+   * If 'lat' is present in the URL, the Rails controller has the coordinates,
+   * so we don't need to request them again.
+   */
+  const urlParams = new URLSearchParams(window.location.search);
+  const latitude = urlParams.get('lat');
+  
+  if (!latitude) {
+    // Location not yet in the URL. Request it from the browser.
+    
+    // Display a temporary loading message or spinner while we wait for location.
+    // This is crucial for user experience.
+    const container = document.getElementById('messages-list-container');
+    if (container) {
+      container.innerHTML = `
+        <div class="p-8 text-center text-gray-500">
+          <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Finding your position in the cosmos... Stand by for localized messages.
+        </div>
+      `;
+    }
+
+    if (navigator.geolocation) {
+      // Wry comment: The browser now holds your fate. Choose wisely.
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          // Success: We have coordinates. Now, instantly reload the page with them.
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          
+          const newUrl = `${window.location.pathname}?lat=${lat}&lon=${lon}`;
+          
+          // Redirect, forcing the server to process the localized query.
+          window.location.href = newUrl;
+        },
+        function(error) {
+          // Failure: The user denied permission, or the location failed.
+          let message = 'Location request failed or was denied. Showing all messages (less localized, more... universal).';
+          
+          if (error.code === error.PERMISSION_DENIED) {
+            message = 'Access to the Geolocation Drive denied by user. Showing messages from the known galaxy.';
+          } else if (error.code === error.POSITION_UNAVAILABLE) {
+            message = 'Location data unavailable. Showing messages from the known quadrant.';
+          }
+          
+          // Display the error gracefully instead of refreshing.
+          if (container) {
+             container.innerHTML = `
+                <div class="p-8 text-center bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-lg shadow-md">
+                  <p class="font-bold">Geolocation Warning:</p>
+                  <p>${message}</p>
+                </div>
+              `;
+          }
+        },
+        {
+          // Options for high accuracy and a short timeout
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      // Browser doesn't support Geolocation.
+      const container = document.getElementById('messages-list-container');
+      if (container) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-red-50 border-l-4 border-red-400 text-red-800 rounded-lg shadow-md">
+            <p class="font-bold">Error:</p>
+            <p>Your browser is too old for this level of technological wizardry. No geolocation support detected.</p>
+          </div>
+        `;
+      }
+    }
+  } else {
+    // If the location *is* in the URL, this is the second visit,
+    // and the server is already processing the localized query.
+    // Ensure the loading message is removed if needed.
+  }
+</script>
+
 <div class="header">
   <p>
     Logged in as <strong><%= current_user.display_name %></strong>
@@ -24,7 +115,18 @@
 
     <div class="messages">
       <% if @messages.empty? %>
-        <div class="empty-messages">No messages yet. Be the first to post!</div>
+        <% if @new_message.nil? %>
+          <div class="empty-messages">Location not provided. Please provide your location to see messages.</div>
+          <form action="<%= request.path %>" method="get">
+            <label for="address">Enter your location:</label>
+            <div>
+                <input type="text" id="address" name="address" placeholder="e.g., 1600 Amphitheatre Parkway, Mountain View, CA">
+                <button type="submit">Submit</button>
+            </div>
+          </form>
+        <% else %>
+          <div class="empty-messages">No messages yet. Be the first to post!</div>
+        <% end %>
       <% else %>
         <% @messages.each do |msg| %>
           <div class="message <%= 'mine' if msg.user_id == current_user.id %>">
@@ -43,12 +145,20 @@
       <% end %>
     </div>
 
-    <div class="composer">
-      <%= form_with model: @new_message, url: messages_path, local: true do |f| %>
-        <%= f.label :body, "New Message" %>
-        <%= f.text_area :body, rows: 4, required: true, placeholder: "Type your message here..." %>
-        <%= f.submit "Send" %>
-      <% end %>
-    </div>
+    <% if @new_message%>
+      <div class="composer">
+        <%= form_with model: @new_message, url: messages_path, local: true do |f| %>
+        <% if params[:lat].present? && params[:lon].present? %>
+          <%= f.hidden_field :lat, value: params[:lat] %>
+          <%= f.hidden_field :lon, value: params[:lon] %>
+        <% elsif params[:address].present? %>
+          <%= f.hidden_field :address, value: params[:address] %>
+        <% end %>
+          <%= f.label :body, "New Message" %>
+          <%= f.text_area :body, rows: 4, required: true, placeholder: "Type your message here..." %>
+          <%= f.submit "Send" %>
+        <% end %>
+      </div>
+    <% end %>
   </section>
 </div>
