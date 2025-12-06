@@ -25,7 +25,7 @@ Below is a list of User Stories that our team worked on, split by each team memb
 
 ### Tasnia
 
-* **(4)** As a user, I want to sign up using email and password so that I can create a personal account.
+* **(4)** As a user, I want to sign up using Google OAuth so that I can create a personal account.
 * **(4)** As a user, I want to log in and log out securely so that my account remains protected.
 * **(4)** As a admin, I will have a visibility radius set (500m) so that messages remain locally relevant.
 * **(4)** As a system, I calculate distances using stored coordinates so that filtering works accurately.
