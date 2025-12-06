@@ -25,19 +25,19 @@ Feature: Chat Interface
     Then I should be on the chat page
 
   Scenario: View empty chat state
-    When I visit "/chat"
+    When I visit "/chat?lat=30.615&lon=-96.341"
     Then I should see "No messages yet. Be the first to post!"
 
   Scenario: View multiple messages
     Given a message exists with body "First message"
     And a message exists with body "Second message"
-    When I visit "/chat"
+    When I visit "/chat?lat=30.615&lon=-96.341"
     Then I should see "First message"
     And I should see "Second message"
 
   Scenario: View message with distance
     Given a message exists with body "Nearby message"
-    When I visit "/chat"
+    When I visit "/chat?lat=30.615&lon=-96.341"
     Then I should see "Nearby message"
     And I should see distance information for messages
 

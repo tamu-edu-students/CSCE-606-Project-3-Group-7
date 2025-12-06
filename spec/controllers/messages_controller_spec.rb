@@ -17,7 +17,7 @@ RSpec.describe MessagesController, type: :controller do
 
       it 'redirects to chat path on success' do
         post :create, params: { message: { body: 'Test message', lat: 34.729847, lon: -86.5859011 } }
-        expect(response).to redirect_to(chat_path)
+        expect(response).to redirect_to(chat_path(lat: '34.729847', lon: '-86.5859011'))
       end
 
       context 'with invalid message' do
