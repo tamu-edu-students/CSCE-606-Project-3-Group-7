@@ -31,10 +31,10 @@ RSpec.describe ChatsController, type: :controller do
       let!(:message) do
         Message.create!(
           user: user,
-          body: 'Test message',
-          ecef_x: 4000100.0,
-          ecef_y: 3000000.0,
-          ecef_z: 2000000.0
+          body: 'Hello from Zachry Engineering Education Education Complex!',
+          ecef_x: -606693,
+          ecef_y: -5459887,
+          ecef_z: 3229843
         )
       end
 
@@ -43,8 +43,11 @@ RSpec.describe ChatsController, type: :controller do
       end
 
       it 'returns success status with messages' do
-        get :index
+        get :index, params: {
+          address: 'Zachry Engineering Education Complex, College Station, TX'
+        }
         expect(response).to have_http_status(:success)
+        expect(assigns(:messages)).to include(message)
       end
     end
   end

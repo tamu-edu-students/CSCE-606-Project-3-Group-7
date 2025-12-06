@@ -24,7 +24,11 @@
 
     <div class="messages">
       <% if @messages.empty? %>
-        <div class="empty-messages">No messages yet. Be the first to post!</div>
+        <% if @new_message.nil? %>
+          <div class="empty-messages">Location not provided. Please provide your location to see messages.</div>
+        <% else %>
+          <div class="empty-messages">No messages yet. Be the first to post!</div>
+        <% end %>
       <% else %>
         <% @messages.each do |msg| %>
           <div class="message <%= 'mine' if msg.user_id == current_user.id %>">
@@ -43,12 +47,14 @@
       <% end %>
     </div>
 
-    <div class="composer">
-      <%= form_with model: @new_message, url: messages_path, local: true do |f| %>
-        <%= f.label :body, "New Message" %>
-        <%= f.text_area :body, rows: 4, required: true, placeholder: "Type your message here..." %>
-        <%= f.submit "Send" %>
-      <% end %>
-    </div>
+    <% if @new_message%>
+      <div class="composer">
+        <%= form_with model: @new_message, url: messages_path, local: true do |f| %>
+          <%= f.label :body, "New Message" %>
+          <%= f.text_area :body, rows: 4, required: true, placeholder: "Type your message here..." %>
+          <%= f.submit "Send" %>
+        <% end %>
+      </div>
+    <% end %>
   </section>
 </div>

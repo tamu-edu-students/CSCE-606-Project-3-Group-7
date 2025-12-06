@@ -1,12 +1,9 @@
 class MessagesController < ApplicationController
+  include MessageHelper
   before_action :require_login
-  before_action :set_user_ecef
 
   def create
     @message = current_user.messages.build(message_params)
-    @message.ecef_x = @user_ecef_x
-    @message.ecef_y = @user_ecef_y
-    @message.ecef_z = @user_ecef_z
 
     if @message.save
       redirect_to chat_path
@@ -25,29 +22,26 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:body)
+    p = params.require(:message).permit(:body, :user_id, :lat, :lon, :address)
+    cartesian = if p[:lat] && p[:lon]
+      MessageHelper.geo_to_cartesian(p[:lat].to_f, p[:lon].to_f)
+    elsif p[:address]
+      MessageHelper.address_to_cartesian(p[:address])
+    else
+      [ nil, nil, nil ]
+    end
+    Rails.logger.info("Cartesian coordinates: #{cartesian.inspect}")
+    p.permit(:body, :user_id).merge(
+      ecef_x: cartesian[0],
+      ecef_y: cartesian[1],
+      ecef_z: cartesian[2]
+    )
   end
 
   def require_login
     unless current_user
       redirect_to root_path, alert: "Please log in to use the chat"
     end
-  end
-
-  # Same fake ECEF as ChatsController
-  def set_user_ecef
-    lat = 30.615
-    lng = -96.341
-
-    rad_lat = lat * Math::PI / 180
-    rad_lng = lng * Math::PI / 180
-    a = 6378137.0
-    e_sq = 6.69437999014e-3
-    n = a / Math.sqrt(1 - e_sq * Math.sin(rad_lat)**2)
-
-    @user_ecef_x = n * Math.cos(rad_lat) * Math.cos(rad_lng)
-    @user_ecef_y = n * Math.cos(rad_lat) * Math.sin(rad_lng)
-    @user_ecef_z = n * (1 - e_sq) * Math.sin(rad_lat)
   end
 
   def current_user

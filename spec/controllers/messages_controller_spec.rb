@@ -11,12 +11,12 @@ RSpec.describe MessagesController, type: :controller do
 
       it 'creates a message' do
         expect {
-          post :create, params: { message: { body: 'Test message' } }
+          post :create, params: { message: { body: 'Test message', lat: 34.729847, lon: -86.5859011 } }
         }.to change(Message, :count).by(1)
       end
 
       it 'redirects to chat path on success' do
-        post :create, params: { message: { body: 'Test message' } }
+        post :create, params: { message: { body: 'Test message', lat: 34.729847, lon: -86.5859011 } }
         expect(response).to redirect_to(chat_path)
       end
 
