@@ -54,3 +54,53 @@ Feature: Admin Dashboard
     When I visit "/admin/messages"
     Then I should be redirected to the chat page
 
+  Scenario: Admin can promote a user to admin
+    Given Google OAuth returns email "admin@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And the logged in user should be made an admin
+    And a user with email "regular@tamu.edu" exists with role "user" in admin context
+    When I visit "/admin/users"
+    And I click on "Make Admin" for user "regular@tamu.edu"
+    Then the user "regular@tamu.edu" should have role "admin"
+    And I should see a success message about granting admin access
+
+  Scenario: Admin can revoke admin access
+    Given Google OAuth returns email "admin@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And the logged in user should be made an admin
+    And a user with email "otheradmin@tamu.edu" exists with role "admin" in admin context
+    When I visit "/admin/users"
+    And I click on "Revoke Admin" for user "otheradmin@tamu.edu"
+    Then the user "otheradmin@tamu.edu" should have role "user"
+    And I should see a success message about revoking admin access
+
+  Scenario: Admin cannot revoke their own admin access
+    Given Google OAuth returns email "admin@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And the logged in user should be made an admin
+    When I visit "/admin/users"
+    Then I should see "Current user" for the logged in user
+    And I should not see a role toggle button for the logged in user
+
+  Scenario: Admin users table is sorted by role by default
+    Given Google OAuth returns email "admin@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And the logged in user should be made an admin
+    And a user with email "regular@tamu.edu" exists with role "user" in admin context
+    When I visit "/admin/users"
+    Then the users should be sorted by role
+    And I should see a sort indicator on the Role column
+
+  Scenario: Admin can toggle sorting to created_at
+    Given Google OAuth returns email "admin@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And the logged in user should be made an admin
+    When I visit "/admin/users?sort=created_at"
+    Then the users should be sorted by created_at
+    And I should not see a sort indicator on the Role column
+

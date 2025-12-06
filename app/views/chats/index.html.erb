@@ -117,13 +117,56 @@
       <% if @messages.empty? %>
         <% if @new_message.nil? %>
           <div class="empty-messages">Location not provided. Please provide your location to see messages.</div>
-          <form action="<%= request.path %>" method="get">
+          <form action="<%= request.path %>" method="get" class="location-form">
             <label for="address">Enter your location:</label>
-            <div>
-                <input type="text" id="address" name="address" placeholder="e.g., 1600 Amphitheatre Parkway, Mountain View, CA">
-                <button type="submit">Submit</button>
+            <div class="form-group">
+              <input type="text" id="address" name="address" placeholder="e.g., 1600 Amphitheatre Parkway, Mountain View, CA">
+              <div class="location-buttons">
+                <button type="button" id="use-location-btn" class="btn-location">Use My Location</button>
+                <button type="submit" class="btn-submit">Submit</button>
+              </div>
             </div>
           </form>
+          <script>
+            document.getElementById('use-location-btn').addEventListener('click', function() {
+              const btn = this;
+              const originalText = btn.textContent;
+              btn.disabled = true;
+              btn.textContent = 'Getting location...';
+              
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                  function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    window.location.href = '<%= request.path %>?lat=' + lat + '&lon=' + lon;
+                  },
+                  function(error) {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                    let message = 'Location request failed or was denied.';
+                    if (error.code === error.PERMISSION_DENIED) {
+                      message = 'Location access denied. Please enter your address manually.';
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                      message = 'Location data unavailable. Please enter your address manually.';
+                    } else if (error.code === error.TIMEOUT) {
+                      message = 'Location request timed out. Please try again or enter your address manually.';
+                    }
+                    alert(message);
+                  },
+                  {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                  }
+                );
+              } else {
+                btn.disabled = false;
+                btn.textContent = originalText;
+                alert('Your browser does not support geolocation. Please enter your address manually.');
+              }
+            });
+          </script>
         <% else %>
           <div class="empty-messages">No messages yet. Be the first to post!</div>
         <% end %>

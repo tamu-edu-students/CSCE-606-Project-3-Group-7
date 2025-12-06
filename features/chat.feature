@@ -41,3 +41,10 @@ Feature: Chat Interface
     Then I should see "Nearby message"
     And I should see distance information for messages
 
+  Scenario: Location input form is displayed when location not provided
+    When I visit "/chat"
+    Then I should see "Location not provided"
+    And I should see "Enter your location"
+    And I should see a location input form
+    And I should see "Use My Location" button
+

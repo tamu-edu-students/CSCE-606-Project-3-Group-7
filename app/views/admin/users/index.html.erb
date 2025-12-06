@@ -20,7 +20,15 @@
             <th>Display Name</th>
             <th>Created At</th>
             <th>Message Count</th>
-            <th>Role</th>
+            <th>
+              <%= link_to admin_users_path(sort: params[:sort] == 'created_at' ? nil : 'created_at'), class: "sort-link" do %>
+                Role
+                <% if params[:sort] != 'created_at' %>
+                  <span class="sort-indicator">▼</span>
+                <% end %>
+              <% end %>
+            </th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +39,16 @@
               <td><%= user.created_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
               <td><%= user.messages.count %></td>
               <td><%= user.admin? ? '<span class="admin-badge">Admin</span>'.html_safe : 'User' %></td>
+              <td>
+                <% if user.id != current_user.id %>
+                  <%= form_with url: admin_user_path(user), method: :patch, local: true, class: "inline-form" do |f| %>
+                    <%= f.hidden_field :role, value: user.admin? ? "user" : "admin" %>
+                    <%= f.submit user.admin? ? "Revoke Admin" : "Make Admin", class: "btn-role-toggle" %>
+                  <% end %>
+                <% else %>
+                  <span class="text-muted">Current user</span>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>
