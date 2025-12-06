@@ -21,4 +21,5 @@ Rails.application.routes.draw do
   # Admin view — optional: all messages
   get "/admin/messages", to: "admin/messages#index", as: :admin_messages
   get "/admin/users", to: "admin/users#index", as: :admin_users
+  patch "/admin/users/:id", to: "admin/users#update", as: :admin_user
 end

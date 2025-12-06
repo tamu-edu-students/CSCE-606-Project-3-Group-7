@@ -5,10 +5,16 @@ class ChatsController < ApplicationController
   def index
     # Use SQL-based radius filtering from Message model
     if (params[:lat] && params[:lon]) || params[:address]
-      @messages = Message.within_radius(cartesian[0],
-                                        cartesian[1],
-                                        cartesian[2])
-      @new_message = Message.new
+      x, y, z = cartesian
+      # Check if geocoding was successful (coordinates are not nil)
+      if x && y && z
+        @messages = Message.within_radius(x, y, z)
+        @new_message = Message.new
+      else
+        # Geocoding failed, show empty state
+        @messages = []
+        @new_message = nil
+      end
     else
       @messages = []
       @new_message = nil

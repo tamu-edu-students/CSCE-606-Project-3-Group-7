@@ -198,7 +198,7 @@ heroku config --app project-3-rails-app
 ### **If you're on the `main` branch:**
 
 ```bash
-git push heroku main
+git push heroku main:main
 ```
 
 ### **If you're on a different branch (feature branch, etc.):**

@@ -20,3 +20,17 @@ end
 Then('I should be on the chat page') do
   expect(page).to have_current_path(chat_path)
 end
+
+Then('I should see a location input form') do
+  expect(page).to have_css('.location-form')
+  expect(page).to have_field('address')
+end
+
+Then('I should see {string} button') do |button_text|
+  expect(page).to have_button(button_text)
+end
+
+Then('I should see a message composer') do
+  expect(page).to have_css('.composer')
+  expect(page).to have_field('New Message')
+end

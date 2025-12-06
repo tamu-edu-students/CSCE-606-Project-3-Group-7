@@ -1,10 +1,35 @@
 /* TAMU Color Palette */
 :root {
+    /* Primary Maroon Colors */
     --tamu-maroon: #500000;
     --tamu-maroon-dark: #3d0000;
     --tamu-maroon-light: #700000;
     --tamu-maroon-accent: #8b0000;
     --tamu-maroon-tint: #fff5f5;
+    
+    /* Neutral Colors */
+    --color-gray-dark: #333;
+    --color-gray: #555;
+    --color-gray-medium: #666;
+    --color-gray-light: #999;
+    --color-gray-lighter: #ddd;
+    --color-gray-lightest: #f1f1f1;
+    --color-white: #fff;
+    --color-bg: #fafafa;
+    
+    /* Semantic Colors */
+    --color-primary: var(--tamu-maroon);
+    --color-primary-dark: var(--tamu-maroon-dark);
+    --color-primary-light: var(--tamu-maroon-light);
+    --color-primary-hover: var(--tamu-maroon-dark);
+    
+    /* Google OAuth - Keep brand blue for recognition, but make it optional */
+    --color-google-blue: #4285f4;
+    --color-google-blue-hover: #357ae8;
+    
+    /* Alternative: Maroon variant for OAuth (uncomment to use instead of blue) */
+    /* --color-oauth: var(--tamu-maroon); */
+    /* --color-oauth-hover: var(--tamu-maroon-dark); */
 }
 
 /* Global Styles */
@@ -310,6 +335,26 @@ body {
     transition: background 0.2s;
 }
 
+.admin-container .sort-link {
+    color: var(--tamu-maroon);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.admin-container .sort-link:hover {
+    color: var(--tamu-maroon-dark);
+    text-decoration: underline;
+}
+
+.admin-container .sort-indicator {
+    font-size: 0.75rem;
+    color: var(--tamu-maroon-dark);
+}
+
 .admin-container .btn {
     background: #dc3545;
     color: white;
@@ -349,7 +394,7 @@ body {
 }
 
 .home-container p {
-    color: #555;
+    color: var(--color-gray);
     line-height: 1.6;
     margin: 1rem 0;
 }
@@ -369,8 +414,8 @@ body {
 
 .home-container .auth-link {
     display: inline-block;
-    background: #4285f4;
-    color: white;
+    background: var(--color-google-blue);
+    color: var(--color-white);
     padding: 0.875rem 2rem;
     border-radius: 8px;
     text-decoration: none;
@@ -380,7 +425,7 @@ body {
 }
 
 .home-container .auth-link:hover {
-    background: #357ae8;
+    background: var(--color-google-blue-hover);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
 }
@@ -454,4 +499,124 @@ body {
     padding: 3rem;
     font-style: italic;
     font-size: 1.1rem;
+}
+
+/* Role toggle button */
+.btn-role-toggle {
+    background: var(--tamu-maroon);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-role-toggle:hover {
+    background: var(--tamu-maroon-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(80, 0, 0, 0.3);
+}
+
+.inline-form {
+    display: inline-block;
+    margin: 0;
+}
+
+.text-muted {
+    color: #999;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* Location input form */
+.location-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(80, 0, 0, 0.1);
+    margin: 1.5rem 0;
+    border: 2px solid #e8e8e8;
+}
+
+.location-form label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--tamu-maroon);
+    font-size: 1rem;
+}
+
+.location-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.location-form input[type="text"] {
+    width: 100%;
+    padding: 0.875rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.location-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--tamu-maroon);
+    box-shadow: 0 0 0 3px rgba(80, 0, 0, 0.1);
+}
+
+.location-form .btn-location {
+    background: var(--tamu-maroon);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.location-form .btn-location:hover {
+    background: var(--tamu-maroon-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(80, 0, 0, 0.3);
+}
+
+.location-form .btn-location:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.location-form .btn-submit {
+    background: var(--tamu-maroon);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.location-form .btn-submit:hover {
+    background: var(--tamu-maroon-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(80, 0, 0, 0.3);
+}
+
+.location-form .location-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
