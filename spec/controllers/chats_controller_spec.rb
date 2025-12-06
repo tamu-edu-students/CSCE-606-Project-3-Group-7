@@ -92,14 +92,16 @@ RSpec.describe ChatsController, type: :controller do
         session[:user_id] = user.id
       end
 
-      it 'raises an error when nil coordinates are passed to within_radius' do
+      it 'handles nil coordinates gracefully when geocoding fails' do
         # Mock address_to_cartesian to return nil (geocoding failure)
         allow(MessageHelper).to receive(:address_to_cartesian).and_return([ nil, nil, nil ])
 
-        # This will raise an error because within_radius can't handle nil coordinates
-        expect {
-          get :index, params: { address: 'Invalid Address That Cannot Be Geocoded' }
-        }.to raise_error(NoMethodError)
+        # Should handle nil coordinates gracefully without raising an error
+        get :index, params: { address: 'Invalid Address That Cannot Be Geocoded' }
+
+        expect(response).to have_http_status(:success)
+        expect(assigns(:messages)).to eq([])
+        expect(assigns(:new_message)).to be_nil
       end
     end
   end

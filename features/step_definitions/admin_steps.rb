@@ -158,3 +158,15 @@ end
 Then('I should not see a sort indicator on the Role column') do
   expect(page).not_to have_css('.sort-indicator')
 end
+
+When('I submit an invalid role update for user {string}') do |email|
+  user = User.find_by!(email: email.downcase)
+  # Submit a PATCH request with an invalid role
+  page.driver.submit :patch, "/admin/users/#{user.id}", { user: { role: 'invalid_role' } }
+  location = page.response_headers['Location']
+  visit location if location
+end
+
+Then('I should see an error message about invalid role') do
+  expect(page).to have_content(/invalid role/i)
+end

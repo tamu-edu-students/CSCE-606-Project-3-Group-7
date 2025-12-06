@@ -104,3 +104,13 @@ Feature: Admin Dashboard
     Then the users should be sorted by created_at
     And I should not see a sort indicator on the Role column
 
+  Scenario: Admin cannot update user with invalid role
+    Given Google OAuth returns email "admin@tamu.edu"
+    When I visit "/auth/google_oauth2/callback"
+    Then I should be logged in
+    And the logged in user should be made an admin
+    And a user with email "target@tamu.edu" exists with role "user" in admin context
+    When I submit an invalid role update for user "target@tamu.edu"
+    Then I should see an error message about invalid role
+    And the user "target@tamu.edu" should still have role "user"
+
