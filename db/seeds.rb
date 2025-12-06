@@ -5,12 +5,12 @@
 # Create admin users (skip in test environment)
 unless Rails.env.test?
   # List of admin user emails
-  admin_emails = ['harsh.wadhawe@tamu.edu', 'shmishra@tamu.edu']
-  
+  admin_emails = [ 'harsh.wadhawe@tamu.edu', 'shmishra@tamu.edu' ]
+
   admin_emails.each do |email|
     # Try to find existing user (created via OAuth sign-in)
     user = User.find_by(email: email.downcase)
-    
+
     if user
       # User exists (likely from OAuth), just update role to admin
       user.update!(role: 'admin')
