@@ -1,30 +1,31 @@
 class ChatsController < ApplicationController
+  include MessageHelper
   before_action :require_login
-  before_action :set_user_ecef
 
   def index
     # Use SQL-based radius filtering from Message model
-    @messages = Message.within_radius(@user_ecef_x, @user_ecef_y, @user_ecef_z)
-    @new_message = Message.new
+    if (params[:lat] && params[:lon]) || params[:address]
+      @messages = Message.within_radius(cartesian[0],
+                                        cartesian[1],
+                                        cartesian[2])
+      @new_message = Message.new
+    else
+      @messages = []
+      @new_message = nil
+    end
   end
 
   private
 
-  # Fake user location until Feature 2 is implemented
-  def set_user_ecef
-    lat = 30.615   # TAMU latitude (hardcoded for now)
-    lng = -96.341  # TAMU longitude
-
-    rad_lat = lat * Math::PI / 180
-    rad_lng = lng * Math::PI / 180
-
-    a = 6378137.0
-    e_sq = 6.69437999014e-3
-    n = a / Math.sqrt(1 - e_sq * Math.sin(rad_lat)**2)
-
-    @user_ecef_x = n * Math.cos(rad_lat) * Math.cos(rad_lng)
-    @user_ecef_y = n * Math.cos(rad_lat) * Math.sin(rad_lng)
-    @user_ecef_z = n * (1 - e_sq) * Math.sin(rad_lat)
+  def cartesian
+    p = params.permit(:lat, :lon, :address)
+    if p[:lat] && p[:lon]
+      MessageHelper.geo_to_cartesian(p[:lat].to_f, p[:lon].to_f)
+    elsif p[:address]
+      MessageHelper.address_to_cartesian(p[:address])
+    else
+      [ nil, nil, nil ]
+    end
   end
 
   def current_user
