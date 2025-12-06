@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_04_001033) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_06_002031) do
   create_table "messages", force: :cascade do |t|
     t.text "body"
     t.float "ecef_x"
@@ -19,6 +19,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_04_001033) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "room", default: "general", null: false
+    t.index ["room"], name: "index_messages_on_room"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
