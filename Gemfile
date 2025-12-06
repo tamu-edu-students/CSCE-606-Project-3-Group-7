@@ -22,6 +22,11 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+# Enable Google OAuth2 authentication
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth"
+gem "dotenv-rails", groups: [ :development, :test ]
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -54,6 +59,7 @@ group :development, :test do
   gem "rubocop-rails", require: false
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
+  gem "bcrypt", "~> 3.1.7"
 
   # Cucumber stack
   gem "cucumber-rails", require: false
@@ -76,4 +82,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "simplecov", require: false
+  gem "shoulda-matchers", "~> 6.0"
 end
