@@ -50,6 +50,12 @@
     <% if @new_message%>
       <div class="composer">
         <%= form_with model: @new_message, url: messages_path, local: true do |f| %>
+        <% if params[:lat].present? && params[:lon].present? %>
+          <%= f.hidden_field :lat, value: params[:lat] %>
+          <%= f.hidden_field :lon, value: params[:lon] %>
+        <% elsif params[:address].present? %>
+          <%= f.hidden_field :address, value: params[:address] %>
+        <% end %>
           <%= f.label :body, "New Message" %>
           <%= f.text_area :body, rows: 4, required: true, placeholder: "Type your message here..." %>
           <%= f.submit "Send" %>

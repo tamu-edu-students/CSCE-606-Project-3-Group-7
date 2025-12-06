@@ -29,7 +29,7 @@ RSpec.describe 'Messages', type: :request do
         post messages_path, params: { message: { body: 'Test message',
           lat: 34.729847,
           lon: -86.5859011 } }
-        expect(response).to redirect_to(chat_path)
+        expect(response).to redirect_to(chat_path(lat: '34.729847', lon: '-86.5859011'))
       end
 
       it 'sets correct ECEF coordinates on message with lat/lon' do

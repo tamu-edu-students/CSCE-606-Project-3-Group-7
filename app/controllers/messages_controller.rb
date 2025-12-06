@@ -3,13 +3,16 @@ class MessagesController < ApplicationController
   before_action :require_login
 
   def create
+    Rails.logger.info("Message creation params: #{params.inspect}")
     @message = current_user.messages.build(message_params)
 
+    location_params = params.require(:message).permit(:lat, :lon, :address).to_h
+
     if @message.save
-      redirect_to chat_path
+      redirect_to chat_path(location_params)
     else
       flash[:alert] = @message.errors.full_messages.join(", ")
-      redirect_to chat_path
+      redirect_to chat_path(location_params)
     end
   end
 
