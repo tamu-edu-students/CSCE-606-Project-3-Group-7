@@ -24,9 +24,12 @@ _A location-based chat application where Texas A&M University students can send 
 
 ---
 
-## Part 1: Development Setup
+## Application Link
 
-Please refer to the official deployment guide for detailed setup instructions:
+https://project-3-rails-app-06cc92ea7f1f.herokuapp.com/
+## Development Setup
+
+Please refer to the deployment guide for detailed setup instructions:
 
 🔗 **Deployment Guide**  
 https://github.com/tamu-edu-students/CSCE-606-Project-3-Group-7/blob/main/docs/deployment_guide.md
