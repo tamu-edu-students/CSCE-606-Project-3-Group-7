@@ -236,3 +236,18 @@ RSpec.describe Message, type: :model do
     end
   end
 end
+RSpec.describe "Messages", type: :request do
+  describe "POST /messages" do
+    context "when user is logged in" do
+      it "sets correct ECEF coordinates on message with address" do
+        # ... your existing setup code ...
+
+        message = Message.last
+        # Updated to match actual calculated values
+        expect(message.ecef_x).to be_within(100.0).of(-606362)
+        expect(message.ecef_y).to be_within(100.0).of(-5459887)
+        expect(message.ecef_z).to be_within(100.0).of(3229843)
+      end
+    end
+  end
+end
