@@ -59,12 +59,10 @@ group :development, :test do
   gem "rubocop", require: false
   gem "rubocop-rails", require: false
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
   gem "bcrypt", "~> 3.1.7"
 
   # Cucumber stack
   gem "cucumber-rails", require: false
-  gem "capybara"
   gem "database_cleaner-active_record"
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
