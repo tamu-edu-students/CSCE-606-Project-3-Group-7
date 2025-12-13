@@ -1,6 +1,12 @@
 <div class="home-container">
   <h1>Welcome to Location Chat</h1>
-
+  <div class="stats-card">
+    <h2>App Statistics</h2>
+    <p class="stat-number"><%= @message_count %></p>
+    <p class="stat-label">
+      <%= @message_count == 1 ? 'Message' : 'Messages' %> in the system
+    </p>
+  </div>
   <% if current_user %>
     <div class="home-user-info">
       <p><strong>Logged in as:</strong> <%= current_user.name %></p>

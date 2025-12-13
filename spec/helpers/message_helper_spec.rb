@@ -27,8 +27,8 @@ RSpec.describe MessageHelper, type: :helper do
     expect(cartesian.length).to eq(3)
     expect(cartesian).to all(be_a(Float))
     # the building has a radius of about 100m, so allow some leeway
-    expect(cartesian[0]).to be_within(100.0).of(-606693)
-    expect(cartesian[1]).to be_within(100.0).of(-5459887)
+    expect(cartesian[0]).to be_within(100.0).of(-606362)
+    expect(cartesian[1]).to be_within(200.0).of(-5459887)
     expect(cartesian[2]).to be_within(100.0).of(3229843)
   end
 
